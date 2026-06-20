@@ -1,6 +1,8 @@
 import psutil
 import time
+
 from shared.logger import log_event
+from shared.threat_scoring import add_score
 
 SUSPICIOUS_TOOLS = [
     "nmap",
@@ -38,12 +40,16 @@ def start_process_monitor():
 
                         detected.add(unique_id)
 
+                        score = add_score("nmap")
+
                         alert = (
-                            f"[ALERT] Suspicious Process: "
-                            f"{name} PID={proc.info['pid']}"
+                            f"[ALERT] NMAP DETECTED | "
+                            f"PID={proc.info['pid']} | "
+                            f"Threat Score={score}"
                         )
 
                         print(alert)
+
                         log_event(alert)
 
             except Exception:
