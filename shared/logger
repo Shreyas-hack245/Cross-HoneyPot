@@ -1,0 +1,16 @@
+from datetime import datetime
+
+def log_event(message):
+
+    timestamp = datetime.now()
+
+    log = f"{timestamp} | {message}"
+
+    print(log)
+
+    with open(
+        "logs/events.log",
+        "a"
+    ) as file:
+
+        file.write(log + "\n")
