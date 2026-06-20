@@ -1,1 +1,6 @@
 2026-06-19 02:05:16,279 | INFO | [MODIFIED] honeypot_files/Passwords.txt
+[ALERT] Suspicious Process: nmap PID=7438
+[ALERT] Suspicious Process: nmap PID=7518
+[ALERT] Suspicious Process: nmap PID=7610
+[ALERT] Suspicious Process: nmap PID=7702
+[ALERT] Suspicious Process: nmap PID=10018
