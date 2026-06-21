@@ -43,7 +43,7 @@ def home():
 
     <body>
 
-        <h1>🛡 Cross-HoneyPot Dashboard</h1>
+        <h1>Cross-HoneyPot Dashboard</h1>
 
         <h2>Recent Events</h2>
 
