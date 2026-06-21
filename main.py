@@ -1,13 +1,23 @@
-import platform
+import threading
 
-if platform.system() == "Linux":
-    from linux.file_monitor import start_monitor
+from linux.process_monitor import (
+    start_process_monitor
+)
 
-elif platform.system() == "Windows":
-    from windows.file_monitor import start_monitor
+from linux.ssh_honeypot import (
+    start_ssh_honeypot
+)
 
-else:
-    print("Unsupported OS")
-    exit()
+t1 = threading.Thread(
+    target=start_process_monitor
+)
 
-start_monitor()
+t2 = threading.Thread(
+    target=start_ssh_honeypot
+)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()

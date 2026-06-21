@@ -1,19 +1,12 @@
 import socket
 from datetime import datetime
 
+from shared.logger import log_event
+from shared.threat_scoring import add_score
+
 HOST = "0.0.0.0"
 PORT = 2222
 
-def log_attempt(ip, username, password):
-
-    with open("logs/ssh_attempts.log", "a") as f:
-
-        f.write(
-            f"{datetime.now()} | "
-            f"IP={ip} | "
-            f"USER={username} | "
-            f"PASS={password}\n"
-        )
 
 def start_ssh_honeypot():
 
@@ -25,7 +18,9 @@ def start_ssh_honeypot():
     server.bind((HOST, PORT))
     server.listen(5)
 
-    print(f"SSH Honeypot listening on {PORT}")
+    print(
+        f"SSH Honeypot listening on port {PORT}"
+    )
 
     while True:
 
@@ -33,35 +28,39 @@ def start_ssh_honeypot():
 
         ip = addr[0]
 
-        print(f"[CONNECTION] {ip}")
-
         client.send(
-            b"Fake SSH Server\nUsername: "
+            b"Username: "
         )
 
-        username = client.recv(
-            1024
-        ).decode().strip()
+        username = (
+            client.recv(1024)
+            .decode()
+            .strip()
+        )
 
         client.send(
             b"Password: "
         )
 
-        password = client.recv(
-            1024
-        ).decode().strip()
-
-        print(
-            f"[LOGIN ATTEMPT] "
-            f"{ip} "
-            f"{username}:{password}"
+        password = (
+            client.recv(1024)
+            .decode()
+            .strip()
         )
 
-        log_attempt(
-            ip,
-            username,
-            password
+        score = add_score(
+            "ssh_attempt"
         )
+
+        event = (
+            f"[SSH ATTEMPT] "
+            f"IP={ip} "
+            f"USER={username} "
+            f"PASS={password} "
+            f"SCORE={score}"
+        )
+
+        log_event(event)
 
         client.send(
             b"Authentication failed\n"
